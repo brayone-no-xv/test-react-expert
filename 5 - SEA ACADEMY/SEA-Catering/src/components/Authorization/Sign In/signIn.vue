@@ -1,5 +1,5 @@
 <template>
-        <section class="form-sea" id="signIn" style="max-width: 400px; margin: 0 auto; padding: 0 1rem;">
+    <section class="form-sea" style="max-width: 400px; margin: 0 auto; padding: 0 1rem;">
         <div class="headline">
             <h1 class="headline-title">Masuk ke Akun Anda</h1>
             <p class="headline-subtitle">Kelola langganan SEA Catering Anda</p>
@@ -17,7 +17,7 @@
         </div>
 
         <div style="text-align: end; margin-bottom: 1.5rem;"> 
-            <a href="#" style="color: #2563eb; text-decoration: none; font-size: 0.875rem;">Lupa kata sandi?</a>
+            <a href="#" style="color: blue; text-decoration: none; font-size: 0.875rem;">Lupa kata sandi?</a>
         </div>
 
         <div>
@@ -26,12 +26,12 @@
 
         <div style="text-align: center; margin: 1rem 0 0 0; font-size: 0.875rem;">
             Belum punya akun? 
-            <a href="/signUp" style="color: #2563eb; text-decoration: underline;">Daftar disini</a>
+            <a href="#" style="color: blue; text-decoration: underline;">Daftar disini</a>
         </div>
     </section>
 </template>
 <style scoped>
-            body {
+        body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background-color: #f8fafc;
             margin: 0;
@@ -40,7 +40,7 @@
         .headline {
             text-align: center;
             color: white;
-            background-color: #2563eb; 
+            background-color: yellowgreen; 
             padding: 2rem;
             margin-bottom: 2rem;
             border-radius: 0.5rem 0.5rem 0 0;
@@ -72,9 +72,10 @@
             font-weight: 500;
             color: #374151;
         }
+        
         .btn-login {
             width: 100%; 
-            background-color: #2563eb; 
+            background-color: yellowgreen; 
             padding: 0.75rem; 
             color: white; 
             font-weight: 600; 
@@ -101,7 +102,7 @@
         
         input:focus {
             outline: none;
-            border-color: #2563eb;
+            border-color: yellowgreen;
             box-shadow: 0 0 0 2px #bfdbfe;
         }
         
@@ -115,4 +116,15 @@
             padding: 0 1.5rem;
         }
 </style>
-<script setup></script>
+<script setup>
+        document.querySelector('.password button').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                this.innerHTML = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                this.innerHTML = '👁️';
+            }
+        });
+</script>
