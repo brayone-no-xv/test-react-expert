@@ -213,4 +213,135 @@
             }
         }
 </style>
-<script setup></script>
+<script setup>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registrationForm');
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eye-icon');
+            const toggleBtn = document.querySelector('.password-toggle');
+            const submitBtn = document.getElementById('submitBtn');
+            const passwordStrength = document.getElementById('password-strength');
+            
+            toggleBtn.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                eyeIcon.classList.toggle('fa-eye-slash');
+                eyeIcon.classList.toggle('fa-eye');
+                
+                const label = type === 'password' ? 'Show password' : 'Hide password';
+                toggleBtn.setAttribute('aria-label', label);
+            });
+            
+            
+                passwordInput.addEventListener('input', function() {
+                const strength = calculatePasswordStrength(passwordInput.value);
+                passwordStrength.textContent = getStrengthMessage(strength);
+                passwordStrength.style.color = getStrengthColor(strength);
+            });
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (validateForm()) {
+                    submitBtn.classList.add('btn-loading');
+                    submitBtn.disabled = true;
+                    
+                    setTimeout(() => {
+                        alert('Pendaftaran berhasil! Silakan cek email Anda untuk verifikasi.');
+                        form.reset();
+                        submitBtn.classList.remove('btn-loading');
+                        submitBtn.disabled = false;
+                    }, 1500);
+                }
+            });
+            
+            form.querySelectorAll('input').forEach(input => {
+                input.addEventListener('blur', validateField);
+                input.addEventListener('input', clearError);
+            });
+            
+            function validateForm() {
+                let isValid = true;
+                
+                isValid = validateField({ target: document.getElementById('nama') }) && isValid;
+                isValid = validateField({ target: document.getElementById('email') }) && isValid;
+                isValid = validateField({ target: document.getElementById('password') }) && isValid;
+                
+                return isValid;
+            }
+            
+            function validateField(e) {
+                const field = e.target;
+                const errorElement = document.getElementById(`${field.id}-error`);
+                
+                if (field.validity.valid) {
+                    errorElement.style.display = 'none';
+                    return true;
+                }
+                
+                errorElement.textContent = getErrorMessage(field);
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            function clearError(e) {
+                const errorElement = document.getElementById(`${e.target.id}-error`);
+                errorElement.style.display = 'none';
+            }
+            
+            function getErrorMessage(field) {
+                if (field.validity.valueMissing) {
+                    return 'Field ini wajib diisi';
+                }
+                
+                if (field.validity.typeMismatch && field.type === 'email') {
+                    return 'Masukkan alamat email yang valid';
+                }
+                
+                if (field.validity.tooShort) {
+                    return `Minimal ${field.minLength} karakter`;
+                }
+                
+                return 'Input tidak valid';
+            }
+            
+            function calculatePasswordStrength(password) {
+                let strength = 0;
+                
+                if (password.length > 10) strength += 2;
+                else if (password.length > 7) strength += 1;
+                
+                if (/\d/.test(password)) strength += 1;
+                
+                if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength += 1;
+                
+                if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 1;
+                
+                return Math.min(strength, 5);
+            }
+            
+            function getStrengthMessage(strength) {
+                const messages = [
+                    'Sangat lemah',
+                    'Lemah',
+                    'Sedang',
+                    'Kuat',
+                    'Sangat kuat'
+                ];
+                
+                return passwordInput.value ? `Kekuatan kata sandi: ${messages[strength]}` : '';
+            }
+            
+            function getStrengthColor(strength) {
+                const colors = [
+                    '#dc2626', 
+                    '#ea580c', 
+                    '#d97706', 
+                    '#65a30d', 
+                    '#16a34a'  
+                ];
+                
+                return colors[strength] || '';
+            }
+        });
+</script>
