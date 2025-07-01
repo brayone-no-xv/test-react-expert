@@ -7,10 +7,11 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        navbar: "SEA-Catering/src/components/navbar/navbar.vue", 
-        home: "SEA-Catering/src/components/hero/hero.vue",
-        subscription: "",
-        contact: "",
+        navbar: "./src/components/landingPage/navbar/navbar.vue", 
+        home: "./src/components/landingPage/hero/hero.vue",
+        subscription: "./src/components/subscription/subscription.vue",
+        contact: "./src/components/contact/contact.vue",
+        testimonial: "./src/components/landingPage/testimonials/testimonial.vue"
       }
     }
   }
