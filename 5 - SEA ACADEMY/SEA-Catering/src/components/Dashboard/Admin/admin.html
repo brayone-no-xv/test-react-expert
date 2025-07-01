@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - SEA Catering</title>
+    <link href="https://cdn.jsdelivr.net/npm/chart.js" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div>
+                <h1>Admin Dashboard</h1>
+                <p>Tinjau Kinerja Bisnis SEA Catering</p>
+            </div>
+            <div class="date-range-picker">
+                <div class="date-input">
+                    <label for="start-date"><i class="fas fa-calendar-alt"></i> Dari tanggal</label>
+                    <input type="date" id="start-date">
+                </div>
+                <div class="date-input">
+                    <label for="end-date"><i class="fas fa-calendar-alt"></i> Sampai tanggal</label>
+                    <input type="date" id="end-date">            
+                </div>
+                <button id="apply-filter" class="filter-btn">
+                    <i class="fas fa-filter"></i> Terapkan
+                </button>
+            </div>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-header">
+                    <h3>Langganan Baru</h3>
+                    <i class="fas fa-user-plus metric-icon"></i>
+                </div>
+                <div class="metric-value" id="new-subscriptions">1,248</div>
+                <div class="metric-change" id="new-subscriptions-change">
+                    <i class="fas fa-arrow-up"></i> 12% dari periode sebelumnya
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-header">
+                    <h3>Pendapatan Bulanan (MRR)</h3>
+                    <i class="fas fa-wallet metric-icon"></i>
+                </div>
+                <div class="metric-value" id="monthly-revenue">Rp 312.5jt</div>
+                <div class="metric-change" id="monthly-revenue-change">
+                    <i class="fas fa-arrow-up"></i> 8% dari periode sebelumnya
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-header">
+                    <h3>Pengaktifan Kembali</h3>
+                    <i class="fas fa-sync-alt metric-icon"></i>
+                </div>
+                <div class="metric-value" id="reactivations">187</div>
+                <div class="metric-change" id="reactivations-change">
+                    <i class="fas fa-arrow-down"></i> 5% dari periode sebelumnya
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-header">
+                    <h3>Pertumbuhan Langganan</h3>
+                    <i class="fas fa-chart-line metric-icon"></i>
+                </div>
+                <div class="metric-value" id="growth-rate">4,872</div>
+                <div class="metric-change" id="growth-rate-change">
+                    <i class="fas fa-arrow-up"></i> 15% dari periode sebelumnya
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-section">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Pertumbuhan Langganan</h3>
+                    <div class="chart-legend">
+                        <span><i class="fas fa-square" style="color: #4CAF50;"></i> Baru</span>
+                        <span><i class="fas fa-square" style="color: #2196F3;"></i> Aktif Kembali</span>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="subscriptionGrowthChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Pendapatan Bulanan (MRR)</h3>
+                    <div class="chart-legend">
+                        <span><i class="fas fa-square" style="color: #FF9800;"></i> Pendapatan</span>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="activities-section">
+            <div class="activities-card">
+                <div class="activities-header">
+                    <h3>Aktivitas Terkini</h3>
+                    <button class="view-all-btn">Lihat Semua</button>
+                </div>
+                <div class="activities-list" id="recent-activities">
+                    <div class="activity-item loading">Memuat aktivitas...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Base Styles */
+        :root {
+            --primary: #2e7d32;
+            --primary-light: #4caf50;
+            --primary-dark: #1b5e20;
+            --secondary: #2196F3;
+            --warning: #FF9800;
+            --danger: #f44336;
+            --text: #333333;
+            --text-light: #666666;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --gray-medium: #e5e7eb;
+            --gray-dark: #6b7280;
+            --border: #e0e0e0;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --radius: 0.5rem;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+            color: var(--text);
+            line-height: 1.6;
+            padding: 0;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        /* Header Section */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .header-section h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .header-section p {
+            color: var(--gray-dark);
+            font-size: 1rem;
+        }
+
+        .date-range-picker {
+            display: flex;
+            align-items: flex-end;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .date-input {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .date-input label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .date-input input[type="date"] {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--gray-medium);
+            border-radius: var(--radius);
+            font-family: inherit;
+            font-size: 0.9rem;
+            min-width: 180px;
+        }
+
+        .filter-btn {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1.25rem;
+            border-radius: var(--radius);
+            font-family: inherit;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+            height: 38px;
+        }
+
+        .filter-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .metric-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-dark);
+        }
+
+        .metric-icon {
+            font-size: 1.25rem;
+            color: var(--primary);
+        }
+
+        .metric-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-change {
+            font-size: 0.8rem;
+            color: var(--gray-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .metric-change .fa-arrow-up {
+            color: var(--primary);
+        }
+
+        .metric-change .fa-arrow-down {
+            color: var(--danger);
+        }
+
+        /* Charts Section */
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .chart-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .chart-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.75rem;
+            color: var(--gray-dark);
+        }
+
+        .chart-legend span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+
+        /* Activities Section */
+        .activities-section {
+            margin-bottom: 2rem;
+        }
+
+        .activities-card {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .activities-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .activities-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .activities-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .view-all-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .view-all-btn:hover {
+            text-decoration: underline;
+        }
+
+        .activities-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            background-color: var(--gray-light);
+        }
+
+        .activity-item.loading {
+            justify-content: center;
+            color: var(--gray-dark);
+        }
+
+        .activity-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .activity-details {
+            flex-grow: 1;
+        }
+
+        .activity-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 0.1rem;
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: var(--gray-dark);
+        }
+
+        .activity-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .header-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .date-range-picker {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .date-range-picker {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.75rem;
+            }
+            
+            .filter-btn {
+                justify-content: center;
+            }
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default dates (last 30 days)
+            const endDate = new Date();
+            const startDate = new Date();
+            startDate.setDate(startDate.getDate() - 30);
+            
+            document.getElementById('start-date').valueAsDate = startDate;
+            document.getElementById('end-date').valueAsDate = endDate;
+            
+            // Initialize charts
+            initCharts();
+            
+            // Load data
+            loadDashboardData();
+            
+            // Set up event listeners
+            document.getElementById('apply-filter').addEventListener('click', loadDashboardData);
+        });
+
+        // Initialize charts
+        function initCharts() {
+            // Subscription Growth Chart
+            const growthCtx = document.getElementById('subscriptionGrowthChart').getContext('2d');
+            window.subscriptionGrowthChart = new Chart(growthCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'],
+                    datasets: [
+                        {
+                            label: 'Langganan Baru',
+                            data: [120, 190, 150, 220],
+                            backgroundColor: '#4CAF50',
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Aktif Kembali',
+                            data: [30, 45, 40, 50],
+                            backgroundColor: '#2196F3',
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    }
+                }
+            });
+
+            // Revenue Chart
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            window.revenueChart = new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'],
+                    datasets: [{
+                        label: 'Pendapatan (MRR)',
+                        data: [75000000, 82000000, 78000000, 95000000],
+                        borderColor: '#FF9800',
+                        backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: false,
+                            grid: {
+                                drawBorder: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return 'Rp' + (value / 1000000) + 'jt';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Rp' + context.raw.toLocaleString('id-ID');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            const startDate = document.getElementById('start-date').value;
+            const endDate = document.getElementById('end-date').value;
+            
+            // Show loading states
+            document.getElementById('new-subscriptions').textContent = '...';
+            document.getElementById('monthly-revenue').textContent = '...';
+            document.getElementById('reactivations').textContent = '...';
+            document.getElementById('growth-rate').textContent = '...';
+            
+            const activitiesList = document.getElementById('recent-activities');
+            activitiesList.innerHTML = '<div class="activity-item loading">Memuat aktivitas...</div>';
+            
+            try {
+                // In a real app, you would fetch from your API
+                // const response = await fetch(`/api/admin/metrics?start=${startDate}&end=${endDate}`);
+                // const data = await response.json();
+                
+                // Mock data for demonstration
+                const data = {
+                    newSubscriptions: 1248,
+                    newSubscriptionsChange: 12,
+                    monthlyRevenue: 312500000,
+                    monthlyRevenueChange: 8,
+                    reactivations: 187,
+                    reactivationsChange: -5,
+                    growthRate: 4872,
+                    growthRateChange: 15,
+                    recentActivities: [
+                        {
+                            type: 'new',
+                            customer: 'Budi Santoso',
+                            package: 'Paket Protein',
+                            amount: 1720000,
+                            timestamp: '2023-05-15T10:30:00'
+                        },
+                        {
+                            type: 'reactivation',
+                            customer: 'Ani Wijaya',
+                            package: 'Paket Diet',
+                            amount: 1290000,
+                            timestamp: '2023-05-14T15:45:00'
+                        },
+                        {
+                            type: 'cancellation',
+                            customer: 'Citra Dewi',
+                            package: 'Paket Royal',
+                            timestamp: '2023-05-14T09:15:00'
+                        },
+                        {
+                            type: 'pause',
+                            customer: 'Dodi Pratama',
+                            package: 'Paket Protein',
+                            timestamp: '2023-05-13T14:20:00'
+                        },
+                        {
+                            type: 'new',
+                            customer: 'Eka Putri',
+                            package: 'Paket Royal',
+                            amount: 2580000,
+                            timestamp: '2023-05-12T11:10:00'
+                        }
+                    ],
+                    growthData: {
+                        weeks: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'],
+                        newSubs: [120, 190, 150, 220],
+                        reactivations: [30, 45, 40, 50]
+                    },
+                    revenueData: {
+                        weeks: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'],
+                        amounts: [75000000, 82000000, 78000000, 95000000]
+                    }
+                };
+                
+                // Update metrics
+                document.getElementById('new-subscriptions').textContent = data.newSubscriptions.toLocaleString('id-ID');
+                document.getElementById('monthly-revenue').textContent = 'Rp' + (data.monthlyRevenue / 1000000).toFixed(1) + 'jt';
+                document.getElementById('reactivations').textContent = data.reactivations.toLocaleString('id-ID');
+                document.getElementById('growth-rate').textContent = data.growthRate.toLocaleString('id-ID');
+                
+                // Update change indicators
+                updateChangeIndicator('new-subscriptions-change', data.newSubscriptionsChange);
+                updateChangeIndicator('monthly-revenue-change', data.monthlyRevenueChange);
+                updateChangeIndicator('reactivations-change', data.reactivationsChange);
+                updateChangeIndicator('growth-rate-change', data.growthRateChange);
+                
+                // Update recent activities
+                renderRecentActivities(data.recentActivities);
+                
+                // Update charts
+                updateCharts(data);
+                
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                
+                // Show error states
+                const metrics = ['new-subscriptions', 'monthly-revenue', 'reactivations', 'growth-rate'];
+                metrics.forEach(metric => {
+                    document.getElementById(metric).textContent = 'Error';
+                });
+                
+                activitiesList.innerHTML = `
+                    <div class="activity-item error">
+                        Gagal memuat aktivitas. Silakan coba lagi.
+                    </div>
+                `;
+            }
+        }
+
+        // Update change indicators
+        function updateChangeIndicator(elementId, changePercent) {
+            const element = document.getElementById(elementId);
+            const isPositive = changePercent >= 0;
+            
+            element.innerHTML = `
+                <i class="fas fa-arrow-${isPositive ? 'up' : 'down'}"></i> 
+                ${Math.abs(changePercent)}% dari periode sebelumnya
+            `;
+            
+            const icon = element.querySelector('i');
+            icon.style.color = isPositive ? 'var(--primary)' : 'var(--danger)';
+        }
+
+        // Render recent activities
+        function renderRecentActivities(activities) {
+            const activitiesList = document.getElementById('recent-activities');
+            activitiesList.innerHTML = '';
+            
+            if (activities.length === 0) {
+                activitiesList.innerHTML = `
+                    <div class="activity-item">
+                        Tidak ada aktivitas terkini
+                    </div>
+                `;
+                return;
+            }
+            
+            activities.forEach(activity => {
+                const activityItem = document.createElement('div');
+                activityItem.className = 'activity-item';
+                
+                let iconClass, icon, title, value = '';
+                
+                switch(activity.type) {
+                    case 'new':
+                        iconClass = 'success';
+                        icon = 'fa-user-plus';
+                        title = `Langganan baru dari ${activity.customer}`;
+                        value = `+${formatCurrency(activity.amount)}`;
+                        break;
+                    case 'reactivation':
+                        iconClass = 'info';
+                        icon = 'fa-sync-alt';
+                        title = `Pengaktifan kembali oleh ${activity.customer}`;
+                        value = `+${formatCurrency(activity.amount)}`;
+                        break;
+                    case 'cancellation':
+                        iconClass = 'danger';
+                        icon = 'fa-times-circle';
+                        title = `Pembatalan oleh ${activity.customer}`;
+                        value = '';
+                        break;
+                    case 'pause':
+                        iconClass = 'warning';
+                        icon = 'fa-pause';
+                        title = `Jeda langganan oleh ${activity.customer}`;
+                        value = '';
+                        break;
+                    default:
+                        iconClass = 'primary';
+                        icon = 'fa-info-circle';
+                        title = `Aktivitas dari ${activity.customer}`;
+                }
+                
+                const time = formatActivityTime(activity.timestamp);
+                
+                activityItem.innerHTML = `
+                    <div class="activity-icon" style="background-color: var(--${iconClass})">
+                        <i class="fas ${icon}"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-title">${title}</div>
+                        <div class="activity-time">${time}</div>
+                    </div>
+                    ${value ? `<div class="activity-value">${value}</div>` : ''}
+                `;
+                
+                activitiesList.appendChild(activityItem);
+            });
+        }
+
+        // Update charts with new data
+        function updateCharts(data) {
+            // Update subscription growth chart
+            window.subscriptionGrowthChart.data.labels = data.growthData.weeks;
+            window.subscriptionGrowthChart.data.datasets[0].data = data.growthData.newSubs;
+            window.subscriptionGrowthChart.data.datasets[1].data = data.growthData.reactivations;
+            window.subscriptionGrowthChart.update();
+            
+            // Update revenue chart
+            window.revenueChart.data.labels = data.revenueData.weeks;
+            window.revenueChart.data.datasets[0].data = data.revenueData.amounts;
+            window.revenueChart.update();
+        }
+
+        // Format currency
+        function formatCurrency(amount) {
+            return 'Rp' + amount.toLocaleString('id-ID');
+        }
+
+        // Format activity time
+        function formatActivityTime(timestamp) {
+            const now = new Date();
+            const activityDate = new Date(timestamp);
+            const diffHours = Math.floor((now - activityDate) / (1000 * 60 * 60));
+            
+            if (diffHours < 24) {
+                return `${diffHours} jam yang lalu`;
+            } else {
+                const options = { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' };
+                return activityDate.toLocaleDateString('id-ID', options);
+            }
+        }
+    </script>
+</body>
+</html>

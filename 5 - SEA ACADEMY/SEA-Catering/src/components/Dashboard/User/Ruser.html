@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <section>
+        <div class="header-content">
+            <h1 class="header-title">Dashboard Langganan Saya</h1>
+            <p class="header-subtitle">Kelola langganan SEA Catering Anda dengan mudah</p>
+        </div>
+                <!-- ACTIVE SUBSCRIPTION -->
+        <h3>Langganan Aktif</h3>
+        <div class="subscription-group">
+            <div class="card-subscription">
+                <h3>Paket</h3>
+                <p>Premium Plus</p>
+            </div>
+            <div class="card-subscription">
+                <h3>Jenis barang</h3>
+                <p>Sehat & Diet</p>
+            </div>
+            <div class="card-subscription">
+                <h3>Hari Pengiriman</h3>
+                <p>Senin,Rabu,Jumat</p>
+            </div>
+            <div class="card-subscription">
+                <h3>Total Harga</h3>
+                <p>Rp 1.300.000/bulan</p>
+            </div>
+            <div class="card-subscription">
+                <h3>Pembaruan Berikutnya</h3>
+                <p>15 Juni 2025</p>
+            </div>
+    </div>
+            <!-- ACTIVE SUBSCRIPTION -->
+
+    <!-- -->
+    <div class="grid">
+        <div class="pause-group">
+            <h2>Jeda Langganan</h2>
+            <p>Anda dapat menjeda langganan sementara. Tidak ada biaya selama periode jeda</p>
+            <div style="display: block;">
+                <label for="start-date">Mulai Jeda</label>
+                <input type="date" id="start-date">
+            </div>
+            <div style="display: block;">                
+                <label for="end-date">Akhir Jeda</label>
+                <input type="date" id="end-date">
+            </div>
+                <button type="button">Ajukan jeda</button>
+        </div>
+
+        <div class="cancel-group">
+            <h3>Batalkan Langganan</h3>
+            <p>Pembelian bersifat permanen. Anda dapat berlangganan kembali kapan saja.</p>
+            <button type="button"> Batalkan Langganan</button>
+        </div>
+    </div>
+            <!-- RIWAYAT LANGGANAN -->
+    <div class="history-group">
+        <h3>Riwayat Langganan
+            <atable class="card-table">
+                <thead>
+                    <tr>
+                        <th>PERIODE</th>
+                        <th>PAKET</th>
+                        <th>STATUS</th>
+                        <th>TOTAL</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </atable>
+        </h3>
+    </div>
+            <!-- RIWAYAT LANGGANAN -->
+</section>
+</body>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f9fafb; /* warna latar belakang halus */
+    color: #1f2937;
+    line-height: 1.6;
+}
+
+section {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header-content {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding: 0 1rem;
+}
+
+.header-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.header-subtitle {
+    font-size: 1.125rem;
+    font-weight: 400;
+    color: #6b7280;
+    max-width: 42rem;
+    margin: 0 auto;
+}
+
+.subscription-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    margin-bottom: 2rem;
+}
+
+.card-subscription {
+    padding: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background-color: #f3f4f6;
+}
+
+.card-subscription h3 {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+}
+
+.card-subscription p {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.pause-group,
+.cancel-group {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.pause-group h2,
+.cancel-group h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.pause-group p,
+.cancel-group p {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin-bottom: 1.25rem;
+}
+
+.pause-group input[type="date"] {
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.pause-group label,
+.pause-group input {
+    display: block;
+    width: 100%;
+}
+
+.pause-group button,
+.cancel-group button {
+    align-self: flex-start;
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.pause-group button:hover,
+.cancel-group button:hover {
+    background-color: #dc2626;
+}
+
+.history-group {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.card-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.card-table thead th {
+    text-align: left;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #4b5563;
+    padding: 0.75rem 1rem;
+    background-color: #f3f4f6;
+}
+
+.card-table tbody td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 0.95rem;
+    color: #111827;
+}
+</style>
+</html>

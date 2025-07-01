@@ -1,68 +1,74 @@
-<template>
-<section>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - SEA Catering</title>
+</head>
+<body>
     <div>
-        <h1>Admin Dashboard</h1>
-        <p>Tinjau Kinerja Bisnis SEA Catering</p>
+        <h1 style="font-weight: 700;">Admin Dashboard</h1>
+        <p style="font-weight: 500;">Tinjau Kinerja Bisnis SEA Catering</p>
     </div>
-
     <div class="date-group">
+        <!-- Dari tanggal -->
         <div class="card-date">
-            <label for="start-date">Dari tanggal</label>
+            <label for="start-date">Dari tanggal</label> <br>
             <input type="date" id="start-date">
         </div>
+        <!-- Awal tanggal -->
         <div class="card-date">
-            <label for="end-date">Sampai tanggal</label>
-            <input type="date" id="end-date">
+            <label for="end-date">Sampai tanggal</label> <br>
+            <input type="date" id="end-date">            
         </div>
     </div>
-
+    
+    <!-- SUBSCRIPTION -->
     <div class="subscription-group">
         <div class="card-subscription">
             <p class="subscription-title">Langganan Baru</p>
+            <div style="font-size: 1.75rem; font-weight: 700;">1,248</div>
         </div>
         <div class="card-subscription">
             <p class="subscription-title">Pendapatan Bulanan</p>
+            <div style="font-size: 1.75rem; font-weight: 700;">Rp 312.5jt</div>
         </div>
         <div class="card-subscription">
             <p class="subscription-title">Pengaktifan kembali</p>
+            <div style="font-size: 1.75rem; font-weight: 700;">187</div>
         </div>
         <div class="card-subscription">
             <p class="subscription-title">Pertumbuhan Langganan</p>
+            <div style="font-size: 1.75rem; font-weight: 700;">4,872</div>
         </div>
     </div>
-
-    <div class="stat-group">
-        <div class="stat-card">
-            <p>Pertumbuhan Langganan</p>
+    <!-- SUBSCRIPTION -->
+    
+    <!-- # -->
+    <div style="display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); margin: 1.5rem 0 1.5rem 0; gap: 1rem;">
+        <div class="card-subscription">
+            <p class="subscription-title">Pertumbuhan Langganan</p>
+            <div style="height: 200px; background: #f1f5f9; border-radius: 0.25rem;"></div>
         </div>
-        <div class="stat-card">
-            <p>Pendapatan Bulanan</p>
+        <div class="card-subscription">
+            <p class="subscription-title">Pendapatan Bulanan</p>
+            <div style="height: 200px; background: #f1f5f9; border-radius: 0.25rem;"></div>
         </div>
     </div>
+    <!-- # -->
 
- 
+    <!-- ACTIVITIES -->
     <div class="activites-group">
-        <div class="card-activites">Aktivitas Terkini</div>
+        <div class="card-activities">
+            <p style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">Aktivitas Terkini</p>
+            <div style="height: 200px; background: #f1f5f9; border-radius: 0.25rem;"></div>
+        </div>
     </div>
-</section>
+    <!-- ACTIVITIES -->
+</body>
 
-</template>
-<style scoped>
-    body {
-            font-family: Arial, sans-serif;
-            margin: 2rem;
-            background-color: #f9f9f9;
-            color: #333;
-        }
-
-        h1 {
-            font-weight: 700;
-        }
-
-        p {
-            font-weight: 500;
-            color: #555;
-        }
+<style>
+            /* Base Styles */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8fafc;
@@ -71,6 +77,7 @@
             color: #1e293b;
         }
 
+        /* Header Section */
         body > div:first-child {
             margin-bottom: 2rem;
         }
@@ -87,6 +94,7 @@
             margin: 0;
         }
 
+        /* Date Range Picker */
         .date-group {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -122,6 +130,7 @@
             font-family: inherit;
         }
 
+        /* Metrics Cards */
         .subscription-group {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -152,6 +161,7 @@
             margin: 0 0 1rem 0;
         }
 
+        /* Charts Section */
         body > div:nth-child(4) {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -159,6 +169,7 @@
             margin: 1.5rem 0;
         }
 
+        /* Activities Section */
         .activites-group {
             margin: 1.5rem 0;
         }
@@ -176,6 +187,7 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
 
+        /* Responsive Design */
         @media (max-width: 1024px) {
             .subscription-group {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -194,4 +206,4 @@
             }
         }
 </style>
-<script setup></script>
+</html>
