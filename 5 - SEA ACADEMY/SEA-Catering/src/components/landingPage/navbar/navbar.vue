@@ -132,9 +132,9 @@ body {
     }
 }
 
-    .btn-login{
+    /* .btn-login{ */
     /* rounded-full bg-blue-800 px-9 py-2 text-sm font-medium text-gray-300 duration-200 hover:bg-gray-700 hover:text-white */
-    }
+    /* } */
 
 @import url("https://fonts.googleapis.com/css2?family=Radio+Canada+Big:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 </style>
